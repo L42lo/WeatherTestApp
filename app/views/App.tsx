@@ -5,6 +5,7 @@ import WeatherIcon from '../components/weather-icon/weather-icon';
 import {WeatherDataInterface} from '../interfaces/weather-data-interface';
 import ApiService from '../services/API/api';
 import {ApiConfig} from '../services/API/api.config';
+import AsyncStorageService from '../services/async-storage-service/async-storage-service';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -24,6 +25,13 @@ class App extends React.Component<{}, State> {
   }
   componentDidMount() {
     this.getWeather();
+    this.getCityFromStorage();
+  }
+  async getCityFromStorage() {
+    const storageData = await AsyncStorageService.getStringFromStorage('CITY');
+    if (storageData) {
+      this.setState({city: storageData});
+    }
   }
   async getWeather() {
     if (this.state.city && this.state.city !== '') {

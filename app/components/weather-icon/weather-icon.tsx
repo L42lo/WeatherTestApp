@@ -14,9 +14,7 @@ class WeatherIcon extends React.Component<Props, {}> {
     super(props);
   }
   render() {
-    // if (!this.props.icon) {
-    //   return null;
-    // }
+    console.log(this.props.icon);
     return (
       <Image
         style={weatherIconStyles.weatherImage}
