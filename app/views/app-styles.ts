@@ -4,25 +4,25 @@ import Colors from '../modules/colors';
 export const appStyles = StyleSheet.create({
   textNormal: {
     fontSize: 18,
-    color: 'white',
+    color: Colors.white,
   },
   textNormalBold: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: 'white',
+    color: Colors.white,
   },
   textH1Bold: {
     fontWeight: 'bold',
     fontSize: 48,
-    color: 'white',
+    color: Colors.white,
   },
   textH2: {
     fontSize: 40,
-    color: 'white',
+    color: Colors.white,
   },
   textH3: {
     fontSize: 24,
-    color: 'white',
+    color: Colors.white,
   },
   textItalic: {
     fontStyle: 'italic',
@@ -31,9 +31,9 @@ export const appStyles = StyleSheet.create({
     flex: 1,
   },
   dayTimeContainer: {
-    backgroundColor: Colors.dayTimeColor,
+    backgroundColor: Colors.dayTimeView,
   },
   nightTimeContainer: {
-    backgroundColor: Colors.nightTimeColor,
+    backgroundColor: Colors.nightTimeView,
   },
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, Image, Pressable} from 'react-native';
 import {WeatherDataInterface} from '../../interfaces/weather-data-interface';
 import WeatherIcon from '../../components/weather-icon/weather-icon';
 import WeatherOtherData from '../../components/weather-other-data/weather-other-data';
@@ -7,10 +7,12 @@ import WeatherSecondaryData from '../../components/weather-secondary-data/weathe
 import Icons from '../../assets/icons';
 import {appStyles} from '../app-styles';
 import {styles} from './styles';
+import {degreeToDirection} from '../../modules/utils/degree-to-direction';
+import LoadingView from '../loading-view/loading-view';
 
 type Props = {
-  city: string;
   weatherData?: WeatherDataInterface;
+  onLocationSelectOpen: () => void;
 };
 
 class WeatherView extends React.Component<Props> {
@@ -18,10 +20,18 @@ class WeatherView extends React.Component<Props> {
     super(props);
   }
   render() {
+    if (!this.props.weatherData) {
+      return <LoadingView />;
+    }
     return (
       <View style={styles.container}>
         <View style={styles.cityContainer}>
-          <Text style={appStyles.textH2}>{this.props.city}</Text>
+          <Text style={appStyles.textH2}>{this.props.weatherData?.name}</Text>
+          <Pressable
+            onPress={this.props.onLocationSelectOpen}
+            style={styles.editContainer}>
+            <Image style={styles.editIcon} source={Icons.edit} />
+          </Pressable>
         </View>
         <View style={styles.detailContainer}>
           <Text style={[appStyles.textH3, appStyles.textItalic]}>
@@ -32,8 +42,8 @@ class WeatherView extends React.Component<Props> {
           <Text style={appStyles.textH1Bold}>
             {Math.round(
               this.props.weatherData ? this.props.weatherData?.main.temp : 0,
-            )}{' '}
-            C°
+            )}
+            {' C°'}
           </Text>
         </View>
         <WeatherIcon icon={this.props.weatherData?.weather[0].icon} />
@@ -48,17 +58,17 @@ class WeatherView extends React.Component<Props> {
           />
           <WeatherSecondaryData
             iconName={Icons.humidity}
-            value={`${this.props.weatherData?.main.humidity}`}
+            value={`${this.props.weatherData?.main.humidity} %`}
           />
         </View>
         <ScrollView contentContainerStyle={styles.otherDataContainer}>
           <WeatherOtherData
             detailName="Wind direction"
-            value={this.props.weatherData?.wind.deg}
+            value={degreeToDirection(this.props.weatherData?.wind.deg)}
           />
           <WeatherOtherData
             detailName="Pressure"
-            value={this.props.weatherData?.main.pressure}
+            value={`${this.props.weatherData?.main.pressure}mb`}
           />
           <WeatherOtherData
             detailName="Maximum temp"
@@ -66,7 +76,7 @@ class WeatherView extends React.Component<Props> {
               this.props.weatherData
                 ? this.props.weatherData?.main.temp_max
                 : 0,
-            )}C°`}
+            )} C°`}
           />
           <WeatherOtherData
             detailName="Minimum temp"
@@ -74,7 +84,7 @@ class WeatherView extends React.Component<Props> {
               this.props.weatherData
                 ? this.props.weatherData?.main.temp_min
                 : 0,
-            )}C°`}
+            )} C°`}
           />
         </ScrollView>
       </View>

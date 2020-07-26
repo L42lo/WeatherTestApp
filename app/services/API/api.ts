@@ -18,14 +18,14 @@ class ApiService {
   getWeatherForLocation(
     cityName: string,
   ): Promise<string | WeatherDataInterface> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       this.instance
         ?.get(`/weather?q=${cityName}&units=metric&appid=${OWM_API_KEY}`)
         .then((response) => {
           resolve((response as AxiosResponse).data as WeatherDataInterface);
         })
         .catch((error) => {
-          reject((error as AxiosError).message);
+          resolve((error as AxiosError).message);
         });
     });
   }

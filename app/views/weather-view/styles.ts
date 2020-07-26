@@ -5,9 +5,25 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
+  editContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    height: 44,
+    justifyContent: 'flex-end',
+    opacity: 0.3,
+    position: 'absolute',
+    width: Dimensions.get('window').width - 32,
+    zIndex: 20,
+  },
+  editIcon: {
+    height: 28,
+    width: 28,
+  },
   cityContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   detailContainer: {
     flexDirection: 'row',
