@@ -60,6 +60,9 @@ class App extends React.Component<{}, State> {
       | WeatherDataInterface
       | string = await this.api.getWeatherForLocation(city);
     if (typeof data === 'object') {
+      // only save city if api call is successful
+      // and save city name from response: some misspells can return successful responses
+      this.saveCity((data as WeatherDataInterface).name);
       this.setState({
         weatherData: data as WeatherDataInterface,
         searchError: false,
@@ -82,6 +85,9 @@ class App extends React.Component<{}, State> {
         });
       }
     }
+  }
+  saveCity(city: string) {
+    AsyncStorageService.setStringToStorage(StorageKeys.USER_CITY, city);
   }
   setIsNightTime() {
     this.setState((state: State) => ({
@@ -106,7 +112,6 @@ class App extends React.Component<{}, State> {
     }
   }
   onLocationSelect(value: string) {
-    AsyncStorageService.setStringToStorage(StorageKeys.USER_CITY, value);
     this.getWeather(value);
   }
 
