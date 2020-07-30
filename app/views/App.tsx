@@ -16,7 +16,6 @@ import StorageKeys from '../modules/storage-keys';
 declare const global: {HermesInternal: null | {}};
 
 type State = {
-  city: string;
   weatherData?: WeatherDataInterface;
   isNightTime: boolean;
   showEditingModal: boolean;
@@ -26,7 +25,6 @@ type State = {
 class App extends React.Component<{}, State> {
   api: ApiService;
   state: State = {
-    city: '',
     isNightTime: true,
     showEditingModal: false,
     searchError: false,
@@ -54,37 +52,34 @@ class App extends React.Component<{}, State> {
     const storageData = await AsyncStorageService.getStringFromStorage(
       StorageKeys.USER_CITY,
     );
-    this.setState({city: storageData ? storageData : DEFAULT_CITY_LIST[0]});
-    setTimeout(() => {
-      this.getWeather();
-    }, 500);
+    const city: string = storageData ? storageData : DEFAULT_CITY_LIST[0];
+    this.getWeather(city);
   }
-  async getWeather() {
-    if (this.state.city && this.state.city !== '') {
-      const data:
-        | WeatherDataInterface
-        | string = await this.api.getWeatherForLocation(this.state.city);
-      if (typeof data === 'object') {
+  async getWeather(city: string) {
+    const data:
+      | WeatherDataInterface
+      | string = await this.api.getWeatherForLocation(city);
+    if (typeof data === 'object') {
+      this.setState({
+        weatherData: data as WeatherDataInterface,
+        searchError: false,
+        showEditingModal: false,
+      });
+    } else {
+      if (data.indexOf('404') > -1) {
+        // only for search errors
+        Alert.alert(
+          'Something happened',
+          "We couldn't find the city you searched for, please try another one.",
+          [
+            {
+              text: 'Ok',
+            },
+          ],
+        );
         this.setState({
-          weatherData: data as WeatherDataInterface,
-          searchError: false,
-          showEditingModal: false,
+          searchError: true,
         });
-      } else {
-        if (data.indexOf('404') > -1) {
-          Alert.alert(
-            'Something happened',
-            "We couldn't find the city you searched for, please try another one.",
-            [
-              {
-                text: 'Ok',
-              },
-            ],
-          );
-          this.setState({
-            searchError: true,
-          });
-        }
       }
     }
   }
@@ -111,13 +106,8 @@ class App extends React.Component<{}, State> {
     }
   }
   onLocationSelect(value: string) {
-    this.setState({
-      city: value,
-    });
     AsyncStorageService.setStringToStorage(StorageKeys.USER_CITY, value);
-    setTimeout(() => {
-      this.getWeather();
-    }, 500);
+    this.getWeather(value);
   }
 
   renderStatusBar() {
